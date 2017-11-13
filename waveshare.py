@@ -298,12 +298,13 @@ class EPaper(object):
     See https://www.waveshare.com/wiki/4.3inch_e-Paper_UART_Module#Serial_port
     for more info.
     '''
-    def __init__(self, port, reset=PIN_RESET, wakeup=PIN_WAKEUP, mode=GPIO.BOARD):
+    def __init__(self, port, auto=False, reset=PIN_RESET, wakeup=PIN_WAKEUP, mode=GPIO.BOARD):
         '''
         Makes an EPaper object that will read and write from the specified
         serial device (file name).
 
         @param port The file name to open.
+        @param auto Automatically update after each call.
         @param reset The GPIO pin to use for resets.
         @param wakeup The GPIO pin to use for wakeups.
         @param mode The mode of GPIO pin addressing (GPIO.BOARD is the default).
@@ -319,6 +320,7 @@ class EPaper(object):
 
         self.reset_pin = reset
         self.wakeup_pin = wakeup
+        self.auto = auto
 
     def reset(self):
         '''
@@ -347,48 +349,66 @@ class EPaper(object):
         '''
         self.serial.write(RefreshAndUpdate().encode())
 
-    def send(command):
+    def send(self, command):
         '''
         Send the provided command to the device, does not wait for a response
         or sleep or make any other considerations.
         '''
         self.serial.write(command.encode())
+        if self.auto:
+            self.serial.write(RefreshAndUpdate().encode())
 
-    def read(self, size=10, timeout=5):
+    def read(self, size=100, timeout=5):
         '''
         Read a response from the underlying serial device.
         '''
-        return self.serial.read(size, timeout)
+        self.serial.timeout = timeout
+        return self.serial.read(size)
 
 if __name__ == "__main__":
     try:
-        import time
         paper = EPaper('/dev/ttyAMA0')
-        print(u'sleep for 10')
-        time.sleep(2)
-        paper.shake()
-        time.sleep(2)
+        print('Handshake')
+        paper.send(Handshake())
+        print(paper.read(2))
         paper.send(DisplayText(10,10, u'你好, World'.encode('gb2312')))
+        print('Hello World 1')
+        print(paper.read(2))
+        print('Setting pallet to DARK_GRAY/white')
+        paper.send(SetPallet(SetPallet.DARK_GRAY))
+        print(paper.read(2))
         paper.send(DisplayText(60, 60, u'Hello, World'.encode('utf-8')))
+        print('Hello World 2')
+        print(paper.read(2))
+        print('Setting pallet to LIGHT_GRAY/black')
+        paper.send(SetPallet(SetPallet.LIGHT_GRAY, SetPallet.BLACK))
+        print(paper.read(2))
         paper.send(DisplayText(120, 120, u'こんにちわ, World'.encode('gb2312')))
+        print('Hello World 3')
+        print(paper.read(2))
+        print('Setting pallet to LIGHT_GRAY/white')
+        paper.send(SetPallet(SetPallet.LIGHT_GRAY))
+        print(paper.read(2))
         paper.send(DisplayText(240, 240, u'привет, World'.encode('gb2312')))
+        print('Hello World 4')
+        print(paper.read(2))
         paper.update()
 
-        print(u'%s' % Handshake())
-        print(u'%s' % SetBaudrate(9600))
-        print(u'%s' % ReadBaudrate())
-        print(u'%s' % ReadStorageMode())
-        print(u'%s' % SetStorageMode(SetStorageMode.TF_MODE))
-        print(u'%s' % SleepMode())
-        print(u'%s' % RefreshAndUpdate())
-        print(u'%s' % CurrentDisplayRotation())
-        print(u'%s' % SetCurrentDisplayRotation(SetCurrentDisplayRotation.NORMAL))
-        print(u'%s' % ImportFontLibrary())
-        print(u'%s' % ImportImage())
-        print(u'%s' % DisplayText(10, 10, u'你好, World'.encode('gb2312')))
-        print(u'%s' % DisplayText(60, 60, u'Hello, World'.encode('utf-8')))
-        print(u'%s' % DisplayText(120, 120, u'こんにちわ, World'.encode('utf-8')))
-        print(u'%s' % SetEnFontSize(SetEnFontSize.SIXTYFOUR))
+#        print(u'%s' % Handshake())
+#        print(u'%s' % SetBaudrate(9600))
+#        print(u'%s' % ReadBaudrate())
+#        print(u'%s' % ReadStorageMode())
+#        print(u'%s' % SetStorageMode(SetStorageMode.TF_MODE))
+#        print(u'%s' % SleepMode())
+#        print(u'%s' % RefreshAndUpdate())
+#        print(u'%s' % CurrentDisplayRotation())
+#        print(u'%s' % SetCurrentDisplayRotation(SetCurrentDisplayRotation.NORMAL))
+#        print(u'%s' % ImportFontLibrary())
+#        print(u'%s' % ImportImage())
+#        print(u'%s' % DisplayText(10, 10, u'你好, World'.encode('gb2312')))
+#        print(u'%s' % DisplayText(60, 60, u'Hello, World'.encode('utf-8')))
+#        print(u'%s' % DisplayText(120, 120, u'こんにちわ, World'.encode('utf-8')))
+#        print(u'%s' % SetEnFontSize(SetEnFontSize.SIXTYFOUR))
         print(paper.read())
 
     finally:
