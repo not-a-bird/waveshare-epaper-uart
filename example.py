@@ -44,6 +44,7 @@ def main():
     Runs through a few example uses of the connected display.
     '''
     paper = EPaper('/dev/ttyAMA0')
+    sleep(5)
     hello_world(paper)
 
 if __name__ == "__main__":
