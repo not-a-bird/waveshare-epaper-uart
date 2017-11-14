@@ -303,6 +303,9 @@ class EPaper(object):
         Makes an EPaper object that will read and write from the specified
         serial device (file name).
 
+        Note: This class makes use of the Raspberry PI GPIO functions, the
+        caller should invoke GPIO.cleanup() before exiting.
+
         @param port The file name to open.
         @param auto Automatically update after each call.
         @param reset The GPIO pin to use for resets.
