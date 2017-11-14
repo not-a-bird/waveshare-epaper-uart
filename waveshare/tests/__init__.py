@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 ''' Tests for the waveshare 800x600 4.3 inch e-Paper UART module classes
+
+These tests are for the functions in the classes, not the actual display unit,
+so no display needs to be hooked up.
 '''
 
 # The unit test base classes have too many public methods, so squash those
