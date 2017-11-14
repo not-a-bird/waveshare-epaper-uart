@@ -11,6 +11,8 @@
 import unittest
 from waveshare import Handshake
 
+MISMATCH = u"Values didn't match: actual: %s expected: %s"
+
 class TestCommandSerialization(unittest.TestCase):
     '''
     Tests that the various commands will serialize to what the wiki had for
@@ -22,9 +24,7 @@ class TestCommandSerialization(unittest.TestCase):
 
         expected = 'A5 00 09 00 CC 33 C3 3C AC'.lower()
         actual = ('%s' % Handshake()).lower()
-        self.assertEquals(expected, actual,
-                "Values didn't match expected value! actual: %s expected: %s"
-                % (actual, expected))
+        self.assertEquals(expected, actual, MISMATCH % (actual, expected))
 
 def main():
     '''
