@@ -1,6 +1,7 @@
 
 
 
+.SILENT:
 .ONESHELL:
 SHELL=/bin/bash
 tests:
