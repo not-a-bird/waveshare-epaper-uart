@@ -275,6 +275,10 @@ class GetPallet(Command):
         super(GetPallet, self).__init__(GetPallet.COMMAND)
 
 class SetEnFontSize(Command):
+    '''
+    From the wiki:
+    Set the English font size (0x1E or 0x1F, may differ depending on version).
+    '''
     COMMAND = b'\x1e'
     THIRTYTWO = b'\x01'
     FOURTYEIGHT = b'\x02'
@@ -283,12 +287,28 @@ class SetEnFontSize(Command):
         super(SetEnFontSize, self).__init__(SetEnFontSize.COMMAND, [size])
 
 class SetZhFontSize(Command):
+    '''
+    From the wiki:
+    Set the Chinese font size (0x1F).
+    '''
     COMMAND = b'\x1f'
     THIRTYTWO = b'\x01'
     FOURTYEIGHT = b'\x02'
     SIXTYFOUR = b'\x03'
     def __init__(self, size=THIRTYTWO):
         super(SetZhFontSize, self).__init__(SetZhFontSize.COMMAND, [size])
+
+class DrawCircle(Command):
+    '''
+    From the wiki:
+    Draw a circle based on the given center coordination and radius.
+    '''
+    COMMAND = b'\x26'
+    def __init__(self, x, y, radius):
+        super(DrawCircle, self).__init__(self.COMMAND, struct.pack(">HHH", x, y, radius))
+
+class FillCircle(DrawCircle):
+    COMMAND = b'\x27'
 
 class EPaper(object):
     '''
@@ -324,6 +344,21 @@ class EPaper(object):
         self.reset_pin = reset
         self.wakeup_pin = wakeup
         self.auto = auto
+
+    def __enter__(self):
+        '''
+        So the EPaper class can be used in a with clause and
+        handle cleaning up the GPIO stuff on exit.  It returns itself.
+        '''
+        return self
+
+    def __exit__(self ,type, value, traceback):
+        '''
+        Invokes the GPIO.cleanup() method.  If that's not a desired behavior,
+        don't use the with clause.
+        '''
+        GPIO.cleanup()
+
 
     def reset(self):
         '''
