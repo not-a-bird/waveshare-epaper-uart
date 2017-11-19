@@ -37,18 +37,15 @@ def hello_world(paper):
         paper.send(SetZhFontSize(random.choice(z_sizes)))
         paper.send(DisplayText(random.choice(x_pool), random.choice(y_pool), random.choice(greets))) #pylint: disable=line-too-long
     paper.send(RefreshAndUpdate())
-    sleep(2)
 
 def main():
     '''
     Runs through a few example uses of the connected display.
     '''
-    paper = EPaper('/dev/ttyAMA0')
-    sleep(5)
-    hello_world(paper)
+    with EPaper('/dev/ttyAMA0') as paper:
+        sleep(5)
+        hello_world(paper)
+        sleep(2)
 
 if __name__ == "__main__":
-    try:
-        main()
-    finally:
-        GPIO.cleanup()
+    main()
