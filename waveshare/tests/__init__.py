@@ -26,8 +26,10 @@ from waveshare import CurrentDisplayRotation
 from waveshare import SetCurrentDisplayRotation
 from waveshare import ImportFontLibrary
 from waveshare import ImportImage
+from waveshare import DrawCircle
+from waveshare import FillCircle
 
-MISMATCH = u"Values didn't match: actual: %s expected: %s"
+MISMATCH = u"Values didn't match: \nactual:   %s \nexpected: %s"
 
 class TestCommandSerialization(unittest.TestCase):
     '''
@@ -125,6 +127,17 @@ class TestCommandSerialization(unittest.TestCase):
         self.wrapper(
             'A5 00 09 0F CC 33 C3 3C A3',
             ImportImage())
+    def test_draw_circle(self):
+        ''' Draw circle should serialize to A5 00 0F 26 00 FF 00 FF 00 80 CC 33 C3 3C 0C. '''
+        self.wrapper(
+            'A5 00 0F 26 00 FF 00 FF 00 80 CC 33 C3 3C 0C',
+            DrawCircle(0xff, 0xff, 0x80))
+
+    def test_fill_circle(self):
+        ''' Draw circle should serialize to A5 00 0F 27 00 FF 00 FF 00 80 CC 33 C3 3C 0D. '''
+        self.wrapper(
+            'A5 00 0F 27 00 FF 00 FF 00 80 CC 33 C3 3C 0D',
+            FillCircle(0xff, 0xff, 0x80))
 
 def main():
     '''
