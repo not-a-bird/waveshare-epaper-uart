@@ -244,8 +244,7 @@ class DisplayText(Command):
     '''
     COMMAND = b'\x30'
     def __init__(self, x, y, text):
-        super(DisplayText, self).__init__(DisplayText.COMMAND, struct.pack(">H", x) +
-                struct.pack(">H", y) + text + '\x00')
+        super(DisplayText, self).__init__(DisplayText.COMMAND, struct.pack(">H", x) + struct.pack(">H", y) + text + '\x00')
 
 class SetPallet(Command):
     '''
@@ -260,8 +259,8 @@ class SetPallet(Command):
     LIGHT_GRAY = b'\x02'
     WHITE = b'\x03'
     def __init__(self, fg=BLACK, bg=WHITE):
-        fg = fg or BLACK
-        bg = bg or WHITE
+        fg = fg or SetPallet.BLACK
+        bg = bg or SetPallet.WHITE
         super(SetPallet, self).__init__(SetPallet.COMMAND, [fg, bg])
 
 class GetPallet(Command):
@@ -274,26 +273,33 @@ class GetPallet(Command):
     def __init__(self):
         super(GetPallet, self).__init__(GetPallet.COMMAND)
 
-class SetEnFontSize(Command):
+class SetFontSize(Command):
+    '''
+    Common parent for font size setting commands.
+    '''
+    THIRTYTWO = b'\x01'
+    FOURTYEIGHT = b'\x02'
+    SIXTYFOUR = b'\x03'
+    def __init__(self, command, size=THIRTYTWO):
+        super(SetFontSize, self).__init__(command, [size])
+
+class SetEnFontSize(SetFontSize):
     '''
     From the wiki:
     Set the English font size (0x1E or 0x1F, may differ depending on version).
     '''
     COMMAND = b'\x1e'
-    THIRTYTWO = b'\x01'
-    FOURTYEIGHT = b'\x02'
-    SIXTYFOUR = b'\x03'
-    def __init__(self, size=THIRTYTWO):
-        super(SetEnFontSize, self).__init__(SetEnFontSize.COMMAND, [size])
+    def __init__(self, size=SetFontSize.THIRTYTWO):
+        super(SetEnFontSize, self).__init__(SetEnFontSize.COMMAND, size)
 
-class SetZhFontSize(SetEnFontSize):
+class SetZhFontSize(SetFontSize):
     '''
     From the wiki:
     Set the Chinese font size (0x1F).
     '''
     COMMAND = b'\x1f'
-    def __init__(self, size=ZeZhFontSize.THIRTYTWO):
-        super(SetZhFontSize, self).__init__(SetZhFontSize.COMMAND, [size])
+    def __init__(self, size=SetEnFontSize.THIRTYTWO):
+        super(SetZhFontSize, self).__init__(SetZhFontSize.COMMAND, size)
 
 class DrawCircle(Command):
     '''
