@@ -286,16 +286,13 @@ class SetEnFontSize(Command):
     def __init__(self, size=THIRTYTWO):
         super(SetEnFontSize, self).__init__(SetEnFontSize.COMMAND, [size])
 
-class SetZhFontSize(Command):
+class SetZhFontSize(SetEnFontSize):
     '''
     From the wiki:
     Set the Chinese font size (0x1F).
     '''
     COMMAND = b'\x1f'
-    THIRTYTWO = b'\x01'
-    FOURTYEIGHT = b'\x02'
-    SIXTYFOUR = b'\x03'
-    def __init__(self, size=THIRTYTWO):
+    def __init__(self, size=ZeZhFontSize.THIRTYTWO):
         super(SetZhFontSize, self).__init__(SetZhFontSize.COMMAND, [size])
 
 class DrawCircle(Command):
