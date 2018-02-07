@@ -24,8 +24,8 @@ IFACE_ADDR_KEY = 'iface_addr'
 def get_ip_addresses():
     '''
     Calls `ip -o -4 a` to get interface addresses.
-    Returns a dictionary of { %s: num, %s: name, %s: key }
-    ''' % (IFACE_NUM_KEY, IFACE_NAME_KEY, IFACE_ADDR_KEY)
+    Returns a dictionary of { 'iface_num': num, 'iface_name': name, 'iface_addr': address }
+    '''
 
     command_string = 'ip -o -4 a'
     command_object = Popen(command_string.split(), stdout=PIPE)
