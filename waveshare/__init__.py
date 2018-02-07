@@ -51,9 +51,10 @@ class Command(object):
     LENGTH_LENGTH = 2
     FOOTER_LENGTH = 4
     CHECK_LENGTH = 1
+    COMMAND = '\x00'
 
-    def __init__(self, command, data=None):
-        self.command = command
+    def __init__(self, command=None, data=None):
+        self.command = command or self.COMMAND
         self.bytes = data or []
 
     def calculate_length(self):
@@ -102,9 +103,6 @@ class Handshake(Command):
     > Handshake command. If the module is ready, it will return an "OK".
 
     '''
-    COMMAND = '\x00'
-    def __init__(self):
-        super(Handshake, self).__init__(Handshake.COMMAND)
 
 class SetBaudrate(Command):
     '''
@@ -131,8 +129,6 @@ class ReadBaudrate(Command):
 
     '''
     COMMAND = '\x02'
-    def __init__(self):
-        super(ReadBaudrate, self).__init__(ReadBaudrate.COMMAND)
 
 class ReadStorageMode(Command):
     '''
@@ -144,8 +140,6 @@ class ReadStorageMode(Command):
     1: MicroSD
     '''
     COMMAND = '\x06'
-    def __init__(self):
-        super(ReadStorageMode, self).__init__(ReadStorageMode.COMMAND)
 
 class SetStorageMode(Command):
     '''
@@ -169,8 +163,6 @@ class SleepMode(Command):
     The system will enter the sleep mode and reduce system power consumption by this command. Under sleep mode, the state indicator is off, and the system does not respond any commands. Only the rising edge on the pin WAKE_UP can wake up the system. 
     '''
     COMMAND = b'\x08'
-    def __init__(self):
-        super(SleepMode, self).__init__(SleepMode.COMMAND)
 
 class RefreshAndUpdate(Command):
     '''
@@ -178,8 +170,6 @@ class RefreshAndUpdate(Command):
     Refresh and update the display at once.
     '''
     COMMAND = b'\x0a'
-    def __init__(self):
-        super(RefreshAndUpdate, self).__init__(RefreshAndUpdate.COMMAND)
 
 class CurrentDisplayRotation(Command):
     '''
@@ -191,8 +181,6 @@ class CurrentDisplayRotation(Command):
     1 or 2: 180° rotation (depending on Firmware)
     '''
     COMMAND = b'\x0c'
-    def __init__(self):
-        super(CurrentDisplayRotation, self).__init__(CurrentDisplayRotation.COMMAND)
 
 class SetCurrentDisplayRotation(Command):
     '''
@@ -220,8 +208,6 @@ class ImportFontLibrary(Command):
     indicator will flicker 3 times when the importation is start and ending.
     '''
     COMMAND = b'\x0e'
-    def __init__(self):
-        super(ImportFontLibrary, self).__init__(ImportFontLibrary.COMMAND)
 
 class ImportImage(Command):
     '''
@@ -270,8 +256,6 @@ class GetPallet(Command):
     "3" means the background color is White.
     '''
     COMMAND = b'\x11'
-    def __init__(self):
-        super(GetPallet, self).__init__(GetPallet.COMMAND)
 
 class SetFontSize(Command):
     '''
@@ -332,6 +316,15 @@ class FillTriangle(DrawTriangle):
     Fill a tri-angle according to three given point coordinates.
     '''
     COMMAND = b'\x29'
+
+class ClearScreen(Command):
+    '''
+    From the wiki:
+    Clear the screen with the background color.
+    '''
+    COMMAND = b'\x2e'
+
+
 
 class EPaper(object):
     '''

@@ -30,6 +30,7 @@ from waveshare import DrawCircle
 from waveshare import FillCircle
 from waveshare import DrawTriangle
 from waveshare import FillTriangle
+from waveshare import ClearScreen
 
 MISMATCH = u"Values didn't match: \nactual:   %s \nexpected: %s"
 
@@ -152,6 +153,12 @@ class TestCommandSerialization(unittest.TestCase):
         self.wrapper(
             'A5 00 15 29 00 0A 00 0A 00 20 00 80 00 80 00 FF CC 33 C3 3C 46',
             FillTriangle(0x0a, 0x0a, 0x20, 0x80, 0x80, 0xff))
+
+    def test_clear_screen(self):
+        ''' Clear screen should serialize to A5 00 09 2E CC 33 C3 3C 82. '''
+        self.wrapper(
+            'A5 00 09 2E CC 33 C3 3C 82',
+            ClearScreen())
 
 def main():
     '''
