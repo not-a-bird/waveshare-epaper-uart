@@ -28,6 +28,8 @@ from waveshare import ImportFontLibrary
 from waveshare import ImportImage
 from waveshare import DrawCircle
 from waveshare import FillCircle
+from waveshare import DrawTriangle
+from waveshare import FillTriangle
 
 MISMATCH = u"Values didn't match: \nactual:   %s \nexpected: %s"
 
@@ -138,6 +140,18 @@ class TestCommandSerialization(unittest.TestCase):
         self.wrapper(
             'A5 00 0F 27 00 FF 00 FF 00 80 CC 33 C3 3C 0D',
             FillCircle(0xff, 0xff, 0x80))
+
+    def test_draw_triangle(self):
+        ''' Draw triangle should serialize to A5 00 15 28 00 0A 00 0A 00 20 00 80 00 80 00 FF CC 33 C3 3C 47. '''
+        self.wrapper(
+            'A5 00 15 28 00 0A 00 0A 00 20 00 80 00 80 00 FF CC 33 C3 3C 47',
+            DrawTriangle(0x0a, 0x0a, 0x20, 0x80, 0x80, 0xff))
+
+    def test_fill_triangle(self):
+        ''' Draw triangle should serialize to A5 00 15 29 00 0A 00 0A 00 20 00 80 00 80 00 FF CC 33 C3 3C 46. '''
+        self.wrapper(
+            'A5 00 15 29 00 0A 00 0A 00 20 00 80 00 80 00 FF CC 33 C3 3C 46',
+            FillTriangle(0x0a, 0x0a, 0x20, 0x80, 0x80, 0xff))
 
 def main():
     '''
