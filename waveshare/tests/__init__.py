@@ -31,6 +31,8 @@ from waveshare import FillCircle
 from waveshare import DrawTriangle
 from waveshare import FillTriangle
 from waveshare import ClearScreen
+from waveshare import DisplayText
+from waveshare import DisplayImage
 
 MISMATCH = u"Values didn't match: \nactual:   %s \nexpected: %s"
 
@@ -159,6 +161,21 @@ class TestCommandSerialization(unittest.TestCase):
         self.wrapper(
             'A5 00 09 2E CC 33 C3 3C 82',
             ClearScreen())
+
+    def test_display_text(self):
+        ''' Drawing text with the provided example text should serialize to A5 00 17 30 00 0A 00 0A C4 E3 BA C3 57 6F 72 6C 64 00 CC 33 C3 3C 9E. '''
+        self.wrapper(
+            'A5 00 17 30 00 0A 00 0A C4 E3 BA C3 57 6F 72 6C 64 00 CC 33 C3 3C 9E',
+            DisplayText(0xa, 0xa, u'你好World'.encode('gb2312')))
+
+    def test_display_image(self):
+        ''' Drawing an image should serialized to A5 00 16 70 00 00 00 00 50 49 43 37 2E 42 4D 50 00 CC 33 C3 3C DF. '''
+        self.wrapper(
+            'A5 00 16 70 00 00 00 00 50 49 43 37 2E 42 4D 50 00 CC 33 C3 3C DF',
+            DisplayImage(0, 0, 'PIC7.BMP'))
+
+
+
 
 def main():
     '''

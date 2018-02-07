@@ -230,7 +230,24 @@ class DisplayText(Command):
     '''
     COMMAND = b'\x30'
     def __init__(self, x, y, text):
-        super(DisplayText, self).__init__(DisplayText.COMMAND, struct.pack(">H", x) + struct.pack(">H", y) + text + '\x00')
+        super(DisplayText, self).__init__(self.COMMAND, struct.pack(">HH", x, y) + text + '\x00')
+
+class DisplayImage(DisplayText):
+    '''
+    From the wiki:
+    Before executing this command, please make sure the bitmap file you want to display is stored in the storage area (either TF card or internal NandFlash).
+
+    Example: A5 00 16 70 00 00 00 00 50 49 43 37 2E 42 4D 50 00 CC 33 C3 3C DF
+
+    Descriptions: Image start coordination position: (0x00, 0x00)
+
+    0x50 49 43 37 2E 42 4D 50: Bitmap name: PIC7.BMP
+
+    Each character string should be end with a "0". So, you should add a "00" at the end of the string 50 49 43 37 2E 42 4D 50.
+
+    The name of the bitmap file should be in uppercase English character(s). And the string length of the bitmap name should be less than 11 characters, in which the ending "0" is included. For example, PIC7.BMP and PIC789.BMP are correct bitmap names, while PIC7890.BMP is a wrong bitmap namem.
+    '''
+    COMMAND = b'\x70'
 
 class SetPallet(Command):
     '''
