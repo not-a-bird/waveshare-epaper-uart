@@ -311,7 +311,27 @@ class DrawCircle(Command):
         super(DrawCircle, self).__init__(self.COMMAND, struct.pack(">HHH", x, y, radius))
 
 class FillCircle(DrawCircle):
+    '''
+    From the wiki:
+    Fill a circle based on the given center coordination and radius.
+    '''
     COMMAND = b'\x27'
+
+class DrawTriangle(Command):
+    '''
+    From the wiki:
+    Draw a tri-angle according to three given point coordinates.
+    '''
+    COMMAND = b'\x28'
+    def __init__(self, x1, y1, x2, y2, x3, y3):
+        super(DrawTriangle, self).__init__(self.COMMAND, struct.pack(">HHHHHH", x1, y1, x2, y2, x3, y3))
+
+class FillTriangle(DrawTriangle):
+    '''
+    From the wiki:
+    Fill a tri-angle according to three given point coordinates.
+    '''
+    COMMAND = b'\x29'
 
 class EPaper(object):
     '''
