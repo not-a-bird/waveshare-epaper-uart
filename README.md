@@ -7,6 +7,9 @@ It requires the GPIO library that is typically available on the Raspberry PI.
 
 <center>![hello world image](https://steemitimages.com/DQmZno6hiNcAAgiVx3mCZbhEbnEt3cakxC5mW6V3p9k1qWg/eink-2.png)</center>
 
+
+This isn't compatible for Python 3+, but there is a relatively-faithful port of the module written for pure Python 3 [over here](https://github.com/jarret/raspi-uart-waveshare/blob/master/waveshare/epaper.py).
+
 Wiring
 ------
 This diagram is for the Pi3, other Pi may work, but the pinout could be
